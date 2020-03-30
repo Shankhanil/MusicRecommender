@@ -5,7 +5,7 @@ app = Flask(__name__)
 def f(name):
     if request.method == 'POST':
         user = request.form['nm']
-    return 'Hello world ' + name
+    return user
 
 if __name__ == '__main__':
     app.debug = True
