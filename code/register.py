@@ -9,9 +9,36 @@ def getHash(string):
     res = hashlib.sha256(string.encode())
     return res.hexdigest()
 
-@app.route('/success/<name>')
-def sucess():
-    return "Welcome to Musicify, %s" % name
+@app.route('/login', methods = ['POST', 'GET'])
+def login():
+    if request.method == 'POST':
+        mail = request.form['mail']
+        password = request.form['password']
+        try:
+            con = sql.connect(".\\databases\\user.db")  
+            con.row_factory = sql.Row  
+            cur = con.cursor()  
+            cur.execute("select userID from UserID where mailID = \'{}\'".format(mail))  
+            rows = cur.fetchall()
+            #print(rows[0], rows[1])
+            for r in rows:
+                print("userid:{}".format(r[0]))
+                userID = r[0]
+            cur.execute("select password from password where userID = \'{}\'".format(userID))
+            rows = cur.fetchall()
+            for r in rows:
+                print("password: {}".format(r[0]))
+                hashedPass = r[0]
+            if getHash(mail + '-' + password) == hashedPass:
+                msg = "success"
+            else:
+                msg = "wrong mailID or password"
+        except:
+            msg = "error 5xx"
+            print(sys.exc_info())
+        finally:
+            return msg
+        
 @app.route('/register', methods = ['POST', 'GET'])
 def registerUser():
     if request.method == 'POST':
@@ -33,7 +60,6 @@ def registerUser():
                 
                 con.commit()
                 msg = "Record successfully added"
-                #return redirect(url_for('/success',name = name))
         except:
             con.rollback()
             msg = "error in insert operation"
