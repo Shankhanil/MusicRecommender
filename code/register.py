@@ -5,6 +5,9 @@ import hashlib
 
 app = Flask(__name__)
 
+#from flask.ext.mail import Mail
+app = Flask(__name__)
+
 def getHash(string):
     res = hashlib.sha256(string.encode())
     return res.hexdigest()
@@ -14,30 +17,33 @@ def login():
     if request.method == 'POST':
         mail = request.form['mail']
         password = request.form['password']
+        msg = "Wrong mail-id or password"
         try:
             con = sql.connect(".\\databases\\user.db")  
             con.row_factory = sql.Row  
-            cur = con.cursor()  
+            cur = con.cursor()
             cur.execute("select userID from UserID where mailID = \'{}\'".format(mail))  
             rows = cur.fetchall()
-            #print(rows[0], rows[1])
-            for r in rows:
-                print("userid:{}".format(r[0]))
-                userID = r[0]
-            cur.execute("select password from password where userID = \'{}\'".format(userID))
-            rows = cur.fetchall()
-            for r in rows:
-                print("password: {}".format(r[0]))
-                hashedPass = r[0]
-            if getHash(mail + '-' + password) == hashedPass:
-                msg = "success"
-            else:
-                msg = "wrong mailID or password"
+            #print(len(rows))
+            if len(rows) > 0:
+                for r in rows:
+                    #print("userid:{}".format(r[0]))
+                    userID = r[0]
+                cur.execute("select password from password where userID = \'{}\'".format(userID))
+                rows2 = cur.fetchall()
+                if len(rows2) > 0:
+                    for r in rows2:
+                        #print("password: {}".format(r[0]))
+                        hashedPass = r[0]
+                    if getHash(mail + '-' + password) == hashedPass:
+                        msg = "success"
         except:
             msg = "error 5xx"
             print(sys.exc_info())
         finally:
             return msg
+
+
         
 @app.route('/register', methods = ['POST', 'GET'])
 def registerUser():
@@ -66,7 +72,6 @@ def registerUser():
             print(sys.exc_info())
       
         finally:
-         #return render_template("result.html",msg = msg)
             con.close()
         
     return msg
