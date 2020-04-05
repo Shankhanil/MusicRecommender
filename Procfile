@@ -1,1 +1,1 @@
-web: python ./code/register.py
+web: python register.py
