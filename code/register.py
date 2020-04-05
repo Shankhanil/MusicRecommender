@@ -2,15 +2,15 @@ from flask import Flask, request, render_template, redirect, url_for
 import sqlite3 as sql
 import sys
 import hashlib
+from Recommender import Recommender
 
 app = Flask(__name__)
 
-#from flask.ext.mail import Mail
-app = Flask(__name__)
 
 def getHash(string):
     res = hashlib.sha256(string.encode())
     return res.hexdigest()
+        
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -22,15 +22,18 @@ def login():
             con = sql.connect(".\\databases\\user.db")  
             con.row_factory = sql.Row  
             cur = con.cursor()
+            
             cur.execute("select userID from UserID where mailID = \'{}\'".format(mail))  
             rows = cur.fetchall()
-            #print(len(rows))
+            
             if len(rows) > 0:
                 for r in rows:
                     #print("userid:{}".format(r[0]))
                     userID = r[0]
+            
                 cur.execute("select password from password where userID = \'{}\'".format(userID))
                 rows2 = cur.fetchall()
+                
                 if len(rows2) > 0:
                     for r in rows2:
                         #print("password: {}".format(r[0]))
@@ -65,10 +68,12 @@ def registerUser():
                 cur.execute("INSERT INTO UserDetails(UserID, name, age) VALUES (?,?, ?)",( userID, name, age))
                 
                 con.commit()
+                
                 msg = "Record successfully added"
         except:
+        
             con.rollback()
-            msg = "error in insert operation"
+            msg = "SOME ERROR OCCURED"
             print(sys.exc_info())
       
         finally:
@@ -77,6 +82,11 @@ def registerUser():
     return msg
         
 #    return "FAILURE"
+
+@app.route('/')
+def index():
+    #return "<h1>welcome to my server</h1>"
+    return render_template("login.html")
 
 if __name__ == "__main__":
     app.run(debug = True)
