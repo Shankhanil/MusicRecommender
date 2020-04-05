@@ -2,7 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for
 import sqlite3 as sql
 import sys
 import hashlib
-from Recommender import Recommender
+# from Recommender import Recommender
 
 app = Flask(__name__)
 
