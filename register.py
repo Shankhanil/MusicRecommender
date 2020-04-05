@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, redirect, url_for
 import sqlite3 as sql
 import sys
 import hashlib
+import os
 # from Recommender import Recommender
 
 app = Flask(__name__)
@@ -110,5 +111,7 @@ def registerPage():
 
 
 if __name__ == "__main__":
-    app.run(host = '0.0.0.0', port = 5000, debug = True)
+    #port = int(os.environ.get('PORT', 33507))
+    #print(os.environ.get('HOME'))
+    app.run(debug = True)
     

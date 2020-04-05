@@ -1,1 +1,1 @@
-web: python register.py
+web:python register.py
