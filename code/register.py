@@ -53,10 +53,7 @@ def login():
                 return "SUCCESS"
             else:
                 return render_template("login.html")
-            #return msg
             
-            # return redirect(url_for("index"))
-        
 @app.route('/register', methods = ['POST', 'GET'])
 def register():
     if request.method == 'POST':
@@ -79,6 +76,7 @@ def register():
                 con.commit()
                 
                 msg = "Record successfully added"
+                return redirect(url_for("login"))
         except:
         
             con.rollback()
