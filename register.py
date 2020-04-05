@@ -111,7 +111,5 @@ def registerPage():
 
 
 if __name__ == "__main__":
-    #port = int(os.environ.get('PORT', 33507))
-    #print(os.environ.get('HOME'))
     app.run(debug = True)
     
