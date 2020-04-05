@@ -10,10 +10,11 @@ app = Flask(__name__)
 def getHash(string):
     res = hashlib.sha256(string.encode())
     return res.hexdigest()
-        
+
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
+    print("login")
     if request.method == 'POST':
         mail = request.form['mail']
         password = request.form['password']
@@ -40,16 +41,24 @@ def login():
                         hashedPass = r[0]
                     if getHash(mail + '-' + password) == hashedPass:
                         msg = "success"
+                    else:
+                        msg = "fail"
         except:
             msg = "error 5xx"
             print(sys.exc_info())
-        finally:
             return msg
-
-
+        finally:
+            # print(msg)
+            if msg == "success":
+                return "SUCCESS"
+            else:
+                return render_template("login.html")
+            #return msg
+            
+            # return redirect(url_for("index"))
         
 @app.route('/register', methods = ['POST', 'GET'])
-def registerUser():
+def register():
     if request.method == 'POST':
         name = request.form['name']
         mail = request.form['mail']
@@ -85,6 +94,7 @@ def registerUser():
 
 @app.route('/')
 def index():
+    print("index()")
     #return "<h1>welcome to my server</h1>"
     return render_template("login.html")
 
