@@ -7,10 +7,15 @@ from Recommender import Recommender
 app = Flask(__name__)
 
 
+
 def getHash(string):
     res = hashlib.sha256(string.encode())
     return res.hexdigest()
 
+
+@app.route('/')
+def index():
+    return redirect(url_for("loginPage"))
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -75,8 +80,8 @@ def register():
                 
                 con.commit()
                 
-                msg = "Record successfully added"
-                return redirect(url_for("login"))
+                msg = "Welcome to sangeetify"
+                return redirect(url_for("loginPage"))
         except:
         
             con.rollback()
@@ -86,15 +91,23 @@ def register():
         finally:
             con.close()
         
-    return msg
+            print( msg)
+            
         
 #    return "FAILURE"
 
-@app.route('/')
-def index():
+@app.route('/loginPage')
+def loginPage():
     print("index()")
     #return "<h1>welcome to my server</h1>"
     return render_template("login.html")
+@app.route('/registerPage')
+def registerPage():
+    print("index()")
+    #return "<h1>welcome to my server</h1>"
+    return render_template("register.html")
+    
+
 
 if __name__ == "__main__":
     app.run(debug = True)
