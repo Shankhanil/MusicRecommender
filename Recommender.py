@@ -7,6 +7,7 @@ class Recommender:
     def __init__(self, songs):
         self.songs = songs
         self.info = pd.read_csv(".\\databases\\song_info.csv")
+        self.clusters = pd.read_csv(".\\databases\\cluster.csv")
     def getIndex(self, s):
         try:
             INDEX = list(self.info.song_name).index(s)
@@ -28,9 +29,13 @@ class Recommender:
             else:
                 sname.append(s)
                 artist.append(self.info.iloc[INDEX].artist_name)
-            #cluster.append(clusters[ clusters['name'] ==  song]['cluster'])
-        data = {'song': sname, 'artist' : artist}
+                cluster.append(self.clusters[ clusters['name'] ==  song]['cluster'])
+
+        data = {'song': sname, 'artist' : artist, 'cluster' : cluster}
         df = pd.DataFrame(data)
-        print(df)
-        #df.to_csv("res.csv")
-        #return df
+        # print(df)
+        df.to_csv("res.csv")
+        return df
+        
+        
+        

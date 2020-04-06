@@ -102,6 +102,7 @@ def loginPage():
     print("index()")
     #return "<h1>welcome to my server</h1>"
     return render_template("login.html")
+
 @app.route('/registerPage')
 def registerPage():
     print("index()")
