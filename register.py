@@ -3,7 +3,7 @@ import sqlite3 as sql
 import sys
 import hashlib
 import os
-# from Recommender import Recommender
+from Recommender import Recommender
 
 app = Flask(__name__)
 
@@ -17,6 +17,16 @@ def getHash(string):
 @app.route('/')
 def index():
     return redirect(url_for("loginPage"))
+
+
+@app.route('/welcome/<name>')
+def welcome(name):
+    rc = Recommender()
+    rc.recommend()
+    songs = rc.getRecommendedSongs()
+    str1 = "<h3>Welcome to sangeetify, {}.</h3>".format(name) 
+    str2 = "Here are a few songs for you:\n{}".format(songs)
+    return str1 + "<br><br>" + str2
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -46,6 +56,12 @@ def login():
                         #print("password: {}".format(r[0]))
                         hashedPass = r[0]
                     if getHash(mail + '-' + password) == hashedPass:
+                        cur.execute("select name from UserDetails where userID = \'{}\'".format(userID))  
+                        rows3 = cur.fetchall()
+                        for r in rows3:
+                        #print("password: {}".format(r[0]))
+                            name = r[0]
+            
                         msg = "success"
                     else:
                         msg = "fail"
@@ -56,10 +72,12 @@ def login():
         finally:
             # print(msg)
             if msg == "success":
-                return "SUCCESS"
+                # return render_template("success.html")
+                return redirect(url_for("welcome", name = name))
             else:
                 return render_template("login.html")
             
+
 @app.route('/register', methods = ['POST', 'GET'])
 def register():
     if request.method == 'POST':
@@ -82,7 +100,9 @@ def register():
                 con.commit()
                 
                 msg = "Welcome to sangeetify"
-                return redirect(url_for("loginPage"))
+                # return redirect(url_for("loginPage"))
+                return redirect(url_for("welcome", name = name))
+                
         except:
         
             con.rollback()
@@ -91,22 +111,16 @@ def register():
       
         finally:
             con.close()
-        
             print( msg)
             
-        
-#    return "FAILURE"
 
 @app.route('/loginPage')
 def loginPage():
     print("index()")
-    #return "<h1>welcome to my server</h1>"
     return render_template("login.html")
 
 @app.route('/registerPage')
 def registerPage():
-    print("index()")
-    #return "<h1>welcome to my server</h1>"
     return render_template("register.html")
     
 
