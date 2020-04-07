@@ -7,6 +7,4 @@ if __name__ == "__main__":
     allsongInfo = rc.getAllSongInfo()
     rc.recommend()
     L = rc.getRecommendedSongs()
-    # print(L)
-    print(rc.addToDB(L))
-    
+    rc.recommend()

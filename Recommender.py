@@ -13,6 +13,7 @@ class Recommender:
         self.info = pd.read_csv(".\\databases\\song_info.csv")
         self.clusters = pd.read_csv(".\\databases\\cluster.csv")
         self.recommendedSongs = []
+        self.history = pd.read_csv("history.csv")
         
     # get the index of a song from dataset
     def getIndex(self, s):
@@ -60,24 +61,40 @@ class Recommender:
         return df
     
     # get 4 most popular songs in a dataset wrt to a cluster
-    def getmostPopularSongs(self, cluster = -1):
+    def getNmostPopularSongs(self, cluster = -1, N = 4):
         
         # if cluster is -1, return 4 most popular songs in the whole dataset
         if cluster == -1:
             allsongCluster = self.getAllSongCluster()
             _df = allsongCluster.sort_values(by = ['popularity'], ascending = False)
-            return list(_df.head(4).name)
+            return list(_df.head(N).name)
 
         # else return 4 most popular songs in that cluster
         else:
             return ['cluster-ful']
 
-    
+    def getClusterOfaSong(self, song):
+        return self.clusters[self.clusters['name'] == song]['cluster']
     # recommender machine
     def recommend(self):
-        if self.FLAG == True:
-            self.recommendedSongs.extend(self.getmostPopularSongs())
-            self.FLAG = False
+        L = list(self.history[ self.history.userID == self.userID ].songList)
+        if L ==  []:
+            self.recommendedSongs.extend(self.getNmostPopularSongs())
+        else:
+            # CREATE THE RECOMMENDER SYSTEM FOR RETURNING CUSTOMERS
+                # Get his history, 
+                # get the clusters of his history-songs
+                Sclusters = []
+                for s in L:
+                    Sclusters.append(self.getClusterOfaSong(s))
+                # choose 4 most popular songs from 3 most popular clusters
+                
+                # choose 4 most popular songs from 2 most popular artists
+                
+                self.recommendedSongs.extend(['abc', 'def'])
+        self.recommendedSongs = list(set(self.recommendedSongs))
+        self.addToDB(self.recommendedSongs)
+            # print(df)
     
     def addToDB(self, song):
         uID = []
@@ -85,13 +102,24 @@ class Recommender:
         for s in song:
             uID.append(self.userID)
             songList.append(s)
-        data = {'userID' : uID, 'songList' : songList}
-        _df = pd.DataFrame(data)
+        
         try:
             df = pd.read_csv("history.csv")
-            df = pd.concat([df, _df])
+            # df = pd.concat([df, _df], ignore_index = True)
+            _userID = list(df.userID)
+            _userID.extend(uID)
+            _songList = list(df.songList)
+            _songList.extend(songList)
+            data = {'userID' : _userID, 'songList' : _songList}
         except:
-            df = _df
+            print("no file exists")
+            data = {'userID' : uID, 'songList' : songList}
         finally:
+            df = pd.DataFrame(data)
             df.to_csv("history.csv")
+        return df
+    
+    
+    def getFromDB(self):
+        df = pd.read_csv("history.csv")
         return df
