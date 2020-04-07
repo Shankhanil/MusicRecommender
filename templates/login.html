@@ -1,22 +1,28 @@
 <!DOCKTYPE html>
 <html>
-<body>
-<h2> Log in</h2>
+<link rel="stylesheet" type="text/css" href="oqjul.css">
   <form action="http://127.0.0.1:5000/login" method="POST">
-  E-mail:<br>
-  <input type="text" name="mail"><br>
-  Password:<br>
-  <input type="password" name="password"><br>
-  <br>
-  <input type="submit" class="loginbtn"> Login</button>
-  <div class="container login">
-  
-  <p>Forgot <a href="register.html"> password?</a><p>
-  
-  <p>Don't have an account ? <a href="http://127.0.0.1:5000/registerPage">Register</a></p>
-  </div>
+  <h2>Login</h2>
+		<p>
+			<label for="Email" class="floatLabel">Email</label>
+			<input id="Email" name="mail" type="text">
+		</p>
+		<p>
+			<label for="password" class="floatLabel">Password</label>
+			<input id="password" name="password" type="password">
+			<span>Enter a password longer than 8 characters</span>
+		</p>
+		 <p>
+                  <input type="submit" value="Login" id="submit">
+                 <div class="container login">
+                 </p>
 
-</form>
+                 <p>Forgot <a href="register.html"> password?</a><p>
+  
+                <p>Don't have an account ? <a href="http://127.0.0.1:5000/registerPage">Register</a></p>
+                 </div>
+  
 
-</body>
+		
+	</form>
 </html>
