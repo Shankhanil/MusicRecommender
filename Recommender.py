@@ -74,7 +74,7 @@ class Recommender:
             return ['cluster-ful']
 
     def getClusterOfaSong(self, song):
-        return self.clusters[self.clusters['name'] == song]['cluster']
+        return list(self.clusters[self.clusters['name'] == song]['cluster'])[0]
     # recommender machine
     def recommend(self):
         self.recommendedSongs = list(self.history[ self.history.userID == self.userID ].songList)
@@ -84,11 +84,14 @@ class Recommender:
             # CREATE THE RECOMMENDER SYSTEM FOR RETURNING CUSTOMERS
                 # Get his history, 
                 # get the clusters of his history-songs
-                
+                L = self.recommendedSongs
+                songCluster = {}
+                for s in L:
+                    songCluster[self.getClusterOfaSong(s)] = 1 
                 # choose 4 most popular songs from 3 most popular clusters
-                
+                print(songCluster)
                 # choose 4 most popular songs from 2 most popular artists
-                self.recommendedSongs.extend(['abc', 'def'])
+                # self.recommendedSongs.extend(['abc', 'def'])
                 
         self.recommendedSongs = list(set(self.recommendedSongs))
         self.addToDB(self.recommendedSongs)
