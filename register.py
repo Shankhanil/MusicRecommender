@@ -6,7 +6,7 @@ import os
 from Recommender import Recommender
 
 app = Flask(__name__)
-
+app.secret_key = "abc"
 
 
 def getHash(string):
@@ -18,6 +18,9 @@ def getHash(string):
 def index():
     return redirect(url_for("loginPage"))
 
+@app.route('/logOut')
+def logOut():
+    return render_template("login.html", message = "You've been logged out")
 
 @app.route('/welcome/<param>')
 def welcome(param):
@@ -33,7 +36,8 @@ def welcome(param):
         str2 = str2 + s + "<br>"
     str1 = "<h3>Welcome to sangeetify, {}.</h3>".format(name) 
     
-    return str1 + "<br><br>" + str2
+    # return str1 + "<br><br>" + str2
+    return render_template("home.html", name = name)
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -80,6 +84,7 @@ def login():
             # print(msg)
             if msg == "success":
                 # return render_template("success.html")
+                # session['username'] = userID
                 return redirect(url_for("welcome", param = name + "-"+userID))
             else:
                 return render_template("login.html")
@@ -123,7 +128,7 @@ def register():
 
 @app.route('/loginPage')
 def loginPage():
-    print("index()")
+    # print(session['username'])
     return render_template("login.html")
 
 @app.route('/registerPage')
