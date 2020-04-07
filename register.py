@@ -19,13 +19,20 @@ def index():
     return redirect(url_for("loginPage"))
 
 
-@app.route('/welcome/<name>')
-def welcome(name):
-    rc = Recommender()
+@app.route('/welcome/<param>')
+def welcome(param):
+    name = param.split('-')[0]
+    userID = param.split('-')[1]
+    print(name, userID)
+    
+    rc = Recommender(userID = userID)
     rc.recommend()
     songs = rc.getRecommendedSongs()
+    str2 = "<h4>Here are a few songs for you:</h4><br>"
+    for s in songs:
+        str2 = str2 + s + "<br>"
     str1 = "<h3>Welcome to sangeetify, {}.</h3>".format(name) 
-    str2 = "Here are a few songs for you:\n{}".format(songs)
+    
     return str1 + "<br><br>" + str2
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -73,7 +80,7 @@ def login():
             # print(msg)
             if msg == "success":
                 # return render_template("success.html")
-                return redirect(url_for("welcome", name = name))
+                return redirect(url_for("welcome", param = name + "-"+userID))
             else:
                 return render_template("login.html")
             
@@ -101,7 +108,7 @@ def register():
                 
                 msg = "Welcome to sangeetify"
                 # return redirect(url_for("loginPage"))
-                return redirect(url_for("welcome", name = name))
+                return redirect(url_for("welcome", param = name + "-"+userID))
                 
         except:
         

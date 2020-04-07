@@ -6,14 +6,12 @@ import random as r
 class Recommender:
 
     # Recommender constructor
-    def __init__(self, songs = []):
+    def __init__(self, userID, songs = []):
         self.FLAG = True
         self.songs = songs
         self.info = pd.read_csv(".\\databases\\song_info.csv")
         self.clusters = pd.read_csv(".\\databases\\cluster.csv")
         self.recommendedSongs = []
-        
-        
         
     # get the index of a song from dataset
     def getIndex(self, s):
@@ -26,9 +24,10 @@ class Recommender:
     def getMySongs(self):
         return self.songs
     
-    # returns all the songs in the dataset
+    # returns all the song info in the dataset
     def getAllSongInfo(self):
         return self.info
+    # returns all the song cluster info 
     def getAllSongCluster(self):
         return self.clusters
 
@@ -78,3 +77,4 @@ class Recommender:
         if self.FLAG == True:
             self.recommendedSongs.extend(self.getmostPopularSongs())
             self.FLAG = False
+        
