@@ -2,9 +2,11 @@ from Recommender import Recommender
 import pandas as pd
 if __name__ == "__main__":
     
-    rc = Recommender()
+    rc = Recommender(userID = 1)
     
     allsongInfo = rc.getAllSongInfo()
     rc.recommend()
-    print(rc.getRecommendedSongs())
+    L = rc.getRecommendedSongs()
+    # print(L)
+    print(rc.addToDB(L))
     

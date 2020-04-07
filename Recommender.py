@@ -7,6 +7,7 @@ class Recommender:
 
     # Recommender constructor
     def __init__(self, userID, songs = []):
+        self.userID = userID
         self.FLAG = True
         self.songs = songs
         self.info = pd.read_csv(".\\databases\\song_info.csv")
@@ -36,7 +37,7 @@ class Recommender:
         return self.recommendedSongs
     
     # get the <song name, artist, cluster> of the songs chosen by user
-    def getDataframe(self):
+    def getAllSongsDataframe(self):
         sname = []
         artist = []
         cluster = []
@@ -77,4 +78,20 @@ class Recommender:
         if self.FLAG == True:
             self.recommendedSongs.extend(self.getmostPopularSongs())
             self.FLAG = False
-        
+    
+    def addToDB(self, song):
+        uID = []
+        songList = []
+        for s in song:
+            uID.append(self.userID)
+            songList.append(s)
+        data = {'userID' : uID, 'songList' : songList}
+        _df = pd.DataFrame(data)
+        try:
+            df = pd.read_csv("history.csv")
+            df = pd.concat([df, _df])
+        except:
+            df = _df
+        finally:
+            df.to_csv("history.csv")
+        return df

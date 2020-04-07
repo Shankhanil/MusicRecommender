@@ -22,8 +22,8 @@ def index():
 def logOut():
     return render_template("login.html", message = "You've been logged out")
 
-@app.route('/welcome/<param>')
-def welcome(param):
+@app.route('/home/<param>')
+def home(param):
     name = param.split('-')[0]
     userID = param.split('-')[1]
     print(name, userID)
@@ -31,13 +31,14 @@ def welcome(param):
     rc = Recommender(userID = userID)
     rc.recommend()
     songs = rc.getRecommendedSongs()
-    str2 = "<h4>Here are a few songs for you:</h4><br>"
+    str2 = ""
     for s in songs:
-        str2 = str2 + s + "<br>"
-    str1 = "<h3>Welcome to sangeetify, {}.</h3>".format(name) 
+        str2 = str2 + s + ","
+    # str1 = "<h3>Welcome to sangeetify, {}.</h3>".format(name) 
     
     # return str1 + "<br><br>" + str2
-    return render_template("home.html", name = name)
+    return render_template("home.html", name = name, songList = str2)
+
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
@@ -85,7 +86,7 @@ def login():
             if msg == "success":
                 # return render_template("success.html")
                 # session['username'] = userID
-                return redirect(url_for("welcome", param = name + "-"+userID))
+                return redirect(url_for("home", param = name + "-"+userID))
             else:
                 return render_template("login.html")
             
@@ -113,7 +114,7 @@ def register():
                 
                 msg = "Welcome to sangeetify"
                 # return redirect(url_for("loginPage"))
-                return redirect(url_for("welcome", param = name + "-"+userID))
+                return redirect(url_for("home", param = name + "-"+userID))
                 
         except:
         
