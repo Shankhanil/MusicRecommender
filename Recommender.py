@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib 
 import pandas as pd
 import random as r
-
 class Recommender:
 
     # Recommender constructor
@@ -75,11 +74,21 @@ class Recommender:
 
     def getClusterOfaSong(self, song):
         return list(self.clusters[self.clusters['name'] == song]['cluster'])[0]
+    #Recommend random popular song
+    def recommendPopularSong(self):
+        L = self.getNmostPopularSongs(N = 20)
+        popularSong = []
+        for s in L:
+            i = r.randint(0,100)
+            if i% 4 == 0:
+                popularSong.append(s)
+        return popularSong
     # recommender machine
     def recommend(self):
+        '''
         self.recommendedSongs = list(self.history[ self.history.userID == self.userID ].songList)
         if self.recommendedSongs == []:
-            self.recommendedSongs.extend(self.getNmostPopularSongs())
+            self.recommendedSongs.extend(self.recommendPopularSong())
         else:
             # CREATE THE RECOMMENDER SYSTEM FOR RETURNING CUSTOMERS
                 # Get his history, 
@@ -94,6 +103,8 @@ class Recommender:
                 # self.recommendedSongs.extend(['abc', 'def'])
                 
         self.recommendedSongs = list(set(self.recommendedSongs))
+        '''
+        self.recommendedSongs.extend(self.recommendPopularSong())
         self.addToDB(self.recommendedSongs)
             # print(df)
     
@@ -103,25 +114,23 @@ class Recommender:
         for s in song:
             uID.append(self.userID)
             songList.append(s)
-        data = {'userID' : uID, 'songList' : songList}
-        df = pd.DataFrame(data)
-        df.to_csv("history.csv", mode = 'w')
-        '''
+
         try:
             df = pd.read_csv("history.csv")
-            # df = pd.concat([df, _df], ignore_index = True)
-            # _userID = list(df.userID)
-            # _userID.extend(uID)
-            # _songList = list(df.songList)
-            # _songList.extend(songList)
-            
+            _userID = list(df.userID)
+            _userID.extend(uID)
+            _songList = list(df.songList)
+            _songList.extend(songList)
+            data = {'userID' : _userID, 'songList' : _songList}
         except:
             print("no file exists")
             data = {'userID' : uID, 'songList' : songList}
         finally:
-            
+            df = pd.DataFrame(data)
+            df.drop_duplicates(inplace = True)
+            df.to_csv("history.csv")
         return df
-    '''
+
     
     def getFromDB(self):
         df = pd.read_csv("history.csv")
