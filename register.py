@@ -1,12 +1,14 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session
+from flask.ext.session import Session
 import sqlite3 as sql
 import sys
 import hashlib
 import os
 from Recommender import Recommender
 
+# SESSION_TYPE = 'redis'
 app = Flask(__name__)
-app.secret_key = "abc"
+Session(app)
 
 
 def getHash(string):
@@ -30,14 +32,19 @@ def home(param):
     
     rc = Recommender(userID = userID)
     rc.recommend()
-    songs = rc.getRecommendedSongs()
+    Clustersongs = rc.getRecommendedSongsByCluster()
+    Artistsongs = rc.getRecommendedSongsByArtist()
     str2 = ""
-    for s in songs:
+    str3 = ""
+    for s in Clustersongs:
         str2 = str2 + s + ","
-    # str1 = "<h3>Welcome to sangeetify, {}.</h3>".format(name) 
+    for s in Artistsongs:
+        str3 = str3 + s + ","
+    
+    # str1 = "<h3>Welcome to SANGEETifyify, {}.</h3>".format(name) 
     
     # return str1 + "<br><br>" + str2
-    return render_template("home.html", name = name, songList = str2)
+    return render_template("home.html", name = name, songListfromCluster = str2, songListfromArtist = str3)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -112,7 +119,7 @@ def register():
                 
                 con.commit()
                 
-                msg = "Welcome to sangeetify"
+                msg = "Welcome to SANGEETifyify"
                 # return redirect(url_for("loginPage"))
                 return redirect(url_for("home", param = name + "-"+userID))
                 
@@ -130,6 +137,8 @@ def register():
 @app.route('/loginPage')
 def loginPage():
     # print(session['username'])
+    # if session.get('key', 'NOT SET') != 'NOT SET':
+        # return 
     return render_template("login.html")
 
 @app.route('/registerPage')
@@ -139,5 +148,6 @@ def registerPage():
 
 
 if __name__ == "__main__":
+    app.secret_key = 'super secret key'
     app.run(debug = True)
     
