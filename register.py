@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for, session
-from flask.ext.session import Session
+from flask_session import Session
 import sqlite3 as sql
 import sys
 import hashlib
@@ -8,7 +8,8 @@ from Recommender import Recommender
 
 # SESSION_TYPE = 'redis'
 app = Flask(__name__)
-Session(app)
+# Session(app)
+
 
 
 def getHash(string):
@@ -22,6 +23,7 @@ def index():
 
 @app.route('/logOut')
 def logOut():
+    session.pop('username', None)
     return render_template("login.html", message = "You've been logged out")
 
 @app.route('/home/<param>')
@@ -37,9 +39,9 @@ def home(param):
     str2 = ""
     str3 = ""
     for s in Clustersongs:
-        str2 = str2 + s + ","
+        str2 = str2 + s + "  ,"
     for s in Artistsongs:
-        str3 = str3 + s + ","
+        str3 = str3 + s + " , "
     
     # str1 = "<h3>Welcome to SANGEETifyify, {}.</h3>".format(name) 
     
@@ -80,7 +82,7 @@ def login():
                         for r in rows3:
                         #print("password: {}".format(r[0]))
                             name = r[0]
-            
+                            session['username'] = name + "-" + userID
                         msg = "success"
                     else:
                         msg = "fail"
@@ -92,7 +94,6 @@ def login():
             # print(msg)
             if msg == "success":
                 # return render_template("success.html")
-                # session['username'] = userID
                 return redirect(url_for("home", param = name + "-"+userID))
             else:
                 return render_template("login.html")
@@ -136,9 +137,11 @@ def register():
 
 @app.route('/loginPage')
 def loginPage():
-    # print(session['username'])
-    # if session.get('key', 'NOT SET') != 'NOT SET':
-        # return 
+    if 'username' in session:
+        # session.pop('username', None)
+
+        # return "logged in as {}".format(session['username'])
+        return redirect(url_for('home', param = session['username']))
     return render_template("login.html")
 
 @app.route('/registerPage')
@@ -148,6 +151,7 @@ def registerPage():
 
 
 if __name__ == "__main__":
-    app.secret_key = 'super secret key'
+    app.secret_key = b'\xdch\x87\x1f\x97\x90\xec\xed\x15O\xef]X\x1eU\xa9\x06\xb6\x0e\x13s\xd3\x95\x07'
+    # app.secret_key = 'super secret key'
     app.run(debug = True)
     
