@@ -1,26 +1,47 @@
+
 <!DOCKTYPE html>
 <html>
-<body>
-
+<link rel="stylesheet" type="text/css" href="oqjulTest.css">
+<form action="http://127.0.0.1:5000/register" method="post">
 <h2> Music Recommendation System</h2>
 <h3> User registration</h3>
+   <p>
+        
+       <label for-"Name" class="floatLabel">Name</label>
+       <input id="Name" name="Name" type="text">
 
-<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='oqjul.css') }}">
-<form action="http://127.0.0.1:5000/register" method="post">
- Name:<br>
- <input type="text" name="name"><br>
- E-mail:<br>
- <input type="text" name="mail"><br>
- Password:<br>
- <input type="password" name="password" size="10"><br>
- Age:<br>
-  <input type="number" name="age"><br>
- <br>
- <button type="submit" class="registerbtn">Register</button>
+    </p>
+      
+    <p>
+        
+       <label for="Email" class="floatLabel">Email</label>
+       <input id="Email" name="Email" type="text">
 
- <p>Already have an account? <a href="http://127.0.0.1:5000/loginPage">Log in</a>.<p>
+    </p>
+    <p>
+        
+       <label for="password" class="floatLabel">Password</label>
+       <input id="password" name="password" type="password">
+       <span>Enter a password longer than 8 characters</span>
+
+    </p>
+    <p>
+        
+       <label for="age" class="floatLabel">Age</label>
+       <input id="age" name="age" type="number">
+
+
+    </p>
+    <p>
+        
+       <input type="submit" value="Register" id="submit">
+       <div class="container register"
+
+    </p>
+
+ <p>Already have an account? <a href="http://127.0.0.1:5000/loginPage">Log in</a>.</p>
 
 </form>
 
-<body>
+
 </html>
