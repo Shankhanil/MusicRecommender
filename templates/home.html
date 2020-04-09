@@ -2,10 +2,15 @@
    <body>
       <h2> WELCOME TO SANGEETify {{name}}</h2>
 	  
-	  <form action="http://127.0.0.1:5000/search" action = 'POST'>
+	  <form action="http://127.0.0.1:5000/search" method = "post" >
 		  <input type="text" placeholder="Search for songs.." name="search">
 		  <button type="submit"> Search<i class="fa fa-search"></i></button>
 	  </form>
+	  
+	  
+	  <p> You searched for:</p><br>
+	  {{search}}<br><br>
+	  
 	  
 	  <p> Here are a few songs Recommended for you:</p><br>
 	  {{songListfromCluster}}<br><br>

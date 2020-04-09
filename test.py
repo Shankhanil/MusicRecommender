@@ -20,12 +20,15 @@ def set():
 
 @app.route('/search', methods = ['POST' , 'GET'])
 def search():
-    searchSTR = ""
+    res = ""
     if request.method == 'POST':
         searchSTR = request.form['search']
-        print(searchSTR)
-        # df = pd.DataFrame(".\\databases\\songList.csv")
-    return searchSTR
+        # print(searchSTR)
+        df = pd.read_csv(".\\databases\\song_info.csv")
+        if searchSTR in list( df[df.song_name == searchSTR].song_name ):
+            res = searchSTR + " by " + list(df[df.song_name == searchSTR].artist_name)[0]
+    return render_template("home.html", search = res)
+    # return searchSTR
     # return "abc"
 if __name__ == "__main__":
     app.run(debug = True)
