@@ -2,16 +2,16 @@
    <body>
       <h2> WELCOME TO SANGEETify {{name}}</h2>
 	  
-	  <form action="127.0.0.1:5000/search">
-		  <input type="text" placeholder="Search.." name="search">
-		  <button type="submit"><i class="fa fa-search"></i></button>
+	  <form action="http://127.0.0.1:5000/search" action = 'POST'>
+		  <input type="text" placeholder="Search for songs.." name="search">
+		  <button type="submit"> Search<i class="fa fa-search"></i></button>
 	  </form>
 	  
 	  <p> Here are a few songs Recommended for you:</p><br>
 	  {{songListfromCluster}}<br><br>
 	  
 	  <p> Here are a few songs from the artists that you may like:</p><br>
-	  {{songListfromArtist}}<br><br>
+	  {{songListfromArtist}}<br><br> 
 	  
 	  <a href = "http://127.0.0.1:5000/logOut">log out</a>
    </body>
