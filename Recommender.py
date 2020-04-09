@@ -270,7 +270,7 @@ class Recommender:
                 
                 # Choose 3 most popular cluster and 2 most popular artist
                 _cluster = collections.Counter(songCluster).most_common(3)
-                _artist = collections.Counter(songArtist).most_common(2)
+                _artist = collections.Counter(songArtist).most_common(3)
                 mostPopCluster = []
                 mostPopArtist = []
                 for d in _cluster:

@@ -26,7 +26,9 @@ if __name__ == "__main__":
     rc = Recommender(userID = 1)
     # rc.recommend()
     
-    rc.listenToSong(song = 'God\'s Plan')
+    rc.listenToSong(song = 'Death Trend Setta')
+    rc.listenToSong(song = 'Guerilla Radio')
+    
     '''
     rc.listenToSong(song = 'Closer')
     rc.listenToSong(song = 'Believer')
