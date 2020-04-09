@@ -16,10 +16,10 @@ def getHash(string):
     res = hashlib.sha256(string.encode())
     return res.hexdigest()
 
-
 @app.route('/')
 def index():
     return redirect(url_for("loginPage"))
+
 
 @app.route('/logOut')
 def logOut():

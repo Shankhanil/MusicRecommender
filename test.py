@@ -5,7 +5,7 @@ from flask import Flask, request, render_template, redirect, url_for, session
 from flask_session import Session
 
 
-
+'''
 app = Flask(__name__)
 # Session(app)
 # Session(app)
@@ -21,10 +21,20 @@ def set():
 def get():
     # session['key'] = 'value'
     return session.get('key', 'NOT SET')
-
+'''
 if __name__ == "__main__":
-    app.secret_key = 'super secret key'
-    # app.config['SESSION_TYPE'] = 'filesystem'
-
-    # sess.init_app(app)
-    app.run(debug = True)
+    rc = Recommender(userID = 1)
+    # rc.recommend()
+    
+    rc.listenToSong(song = 'God\'s Plan')
+    '''
+    rc.listenToSong(song = 'Closer')
+    rc.listenToSong(song = 'Believer')
+    rc.listenToSong(song = 'Rap God')
+    '''
+    # rc.listenToSong(song = 'Numb')
+    rc.recommend()
+    
+    
+    
+    
