@@ -4,6 +4,7 @@ import pandas as pd
 from flask import Flask, request, render_template, redirect, url_for, session
 from flask_session import Session
 
+import re
 
 
 app = Flask(__name__)
@@ -21,15 +22,33 @@ def set():
 @app.route('/search', methods = ['POST' , 'GET'])
 def search():
     res = ""
+    res2 = ""
     if request.method == 'POST':
         searchSTR = request.form['search']
-        # print(searchSTR)
+        print(searchSTR)
         df = pd.read_csv(".\\databases\\song_info.csv")
-        if searchSTR in list( df[df.song_name == searchSTR].song_name ):
-            res = searchSTR + " by " + list(df[df.song_name == searchSTR].artist_name)[0]
-    return render_template("home.html", search = res)
-    # return searchSTR
-    # return "abc"
+        
+        L = list( df.song_name )
+        # print (L)
+        
+        for x in L:
+            X = re.findall('\A'+searchSTR, x)
+            if(X):
+                res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
+                
+        L = list( df.artist_name )
+        # print (L)
+        artistL = []
+        for x in L:
+            X = re.findall('\A'+searchSTR, x)
+            if(X):
+                # res2 = res2 + x + ", "
+                if x not in artistL:
+                    artistL.append(x)
+        for x in artistL:
+            res2 = res2 + x + ", "
+    return render_template("home.html", search = res, searchArtist = res2)
+
 if __name__ == "__main__":
     app.run(debug = True)
     

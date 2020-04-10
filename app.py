@@ -5,6 +5,8 @@ import sys
 import hashlib
 import os
 from Recommender import Recommender
+import pandas as pd
+import re
 
 # SESSION_TYPE = 'redis'
 app = Flask(__name__)
@@ -47,6 +49,41 @@ def home(param):
     
     # return str1 + "<br><br>" + str2
     return render_template("home.html", name = name, songListfromCluster = str2, songListfromArtist = str3)
+
+@app.route('/search', methods = ['POST' , 'GET'])
+def search():
+    res = ""
+    res2 = ""
+    if request.method == 'POST':
+        searchSTR = request.form['search']
+        print(searchSTR)
+        df = pd.read_csv(".\\databases\\song_info.csv")
+        
+        L = list( df.song_name )
+        # print (L)
+        songL = []
+        for x in L:
+            X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
+            if(X):
+                # res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
+                if x not in songL:
+                    songL.append(x)
+                    
+        for x in songL:
+            res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
+                
+        L = list( df.artist_name )
+        # print (L)
+        artistL = []
+        for x in L:
+            X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
+            if(X):
+                # res2 = res2 + x + ", "
+                if x not in artistL:
+                    artistL.append(x)
+        for x in artistL:
+            res2 = res2 + x + ", "
+    return render_template("home.html", search = res, searchArtist = res2)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
