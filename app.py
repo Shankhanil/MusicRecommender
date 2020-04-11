@@ -100,7 +100,7 @@ def search():
                     artistL.append(x)
         for x in artistL:
             res2 = res2 + x + ", "
-    return render_template("home.html", search = res, searchArtist = res2)
+    return render_template("_home.html", search = res, searchArtist = res2)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
