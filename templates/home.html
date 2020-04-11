@@ -2,6 +2,8 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/tableStyle.css') }}">
 <style>
 body {
   margin: 0;
@@ -114,12 +116,20 @@ p    {color: MidnightBlue;}
 	  <!-- <p> your searched Artist List:</p><br> -->
 	  <!-- {{searchArtist}}<br><br> -->
 	  
-	  
+	  {% if songListfromCluster %}
 	  <p> Here are a few songs Recommended for you:</p><br>
-	  {{songListfromCluster}}<br><br>
+	  <!-- {{songListfromCluster}} -->
+	  {% for table in tables %}
+		<h2>{{titles[loop.index]}}</h2>
+		{{ table|safe }}
+	  {% endfor %}
+	  <br><br>
+	  {% endif %}
 	  
-	  <p> Here are a few songs from the artists that you may like:</p><br>
-	  {{songListfromArtist}}<br><br> 
+	  {% if songListfromArtist %}
+		<p> Here are a few songs from the artists that you may like:</p><br>
+		{{songListfromArtist}}<br><br> 
+	  {% endif %}
 	  
 	  <a href = "http://127.0.0.1:5000/logOut">log out</a>
 </body>

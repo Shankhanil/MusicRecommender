@@ -57,15 +57,26 @@ def home():
     Artistsongs = rc.getRecommendedSongsByArtist()
     str2 = ""
     str3 = ""
-    for s in Clustersongs:
-        str2 = str2 + s + "  ,"
-    for s in Artistsongs:
-        str3 = str3 + s + " , "
+    # for s in Clustersongs:
+        # str2 = str2 + s + "  ,"
+    # for s in Artistsongs:
+        # str3 = str3 + s + " , "
     
     # str1 = "<h3>Welcome to SANGEETifyify, {}.</h3>".format(name) 
     
     # return str1 + "<br><br>" + str2
-    return render_template("home.html", name = name, songListfromCluster = str2, songListfromArtist = str3)
+    songListfromCluster = False
+    songListfromArtist = False
+    if len(Clustersongs) > 0:
+        songListfromCluster = True
+    if len(Artistsongs) > 0:
+        songListfromArtist = True
+    
+    dfSongCluster = pd.DataFrame( data = {'song_name' : Clustersongs})
+    dfSongArtist = pd.DataFrame( data = {'song_name' : Artistsongs})
+    return render_template("home.html", name = name, songListfromCluster = songListfromCluster, songListfromArtist = songListfromArtist, \
+        tables = [dfSongCluster.to_html(header = False, index = False), dfSongArtist.to_html(header = False, index = False)]\
+        , titles = ['name'])
 
 @app.route('/search', methods = ['POST' , 'GET'])
 def search():

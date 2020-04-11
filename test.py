@@ -17,41 +17,27 @@ app = Flask(__name__)
 def set():
     # session['key'] = 'abc'
     # return 'ok'
-    return render_template("home.html")
-
-@app.route('/search', methods = ['POST' , 'GET'])
+    # return render_template("home.html")
+    return "hey"
+@app.route('/search')
 def search():
-    res = ""
-    res2 = ""
-    if request.method == 'POST':
-        searchSTR = request.form['search']
-        print(searchSTR)
-        df = pd.read_csv(".\\databases\\song_info.csv")
-        
-        L = list( df.song_name )
-        # print (L)
-        
-        for x in L:
-            X = re.findall('\A'+searchSTR, x)
-            if(X):
-                res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
-                
-        L = list( df.artist_name )
-        # print (L)
-        artistL = []
-        for x in L:
-            X = re.findall('\A'+searchSTR, x)
-            if(X):
-                # res2 = res2 + x + ", "
-                if x not in artistL:
-                    artistL.append(x)
-        for x in artistL:
-            res2 = res2 + x + ", "
-    return render_template("home.html") #, search = res, searchArtist = res2)
+    # res = ""
+    # res2 = ""
+    # if request.method == 'POST':
+        # searchSTR = request.form['search']
+        # print(searchSTR)
+    N = 2
+    df = pd.read_csv(".\\databases\\song_info.csv")
+    _df = pd.DataFrame( data = {'songName' : list(df.head(N).song_name), 'artistName': list(df.head(N).artist_name), 'link' : ['link']*N } ) 
+    print(_df.to_html())
+
+    return render_template('test.html', tables =  [_df.to_html(header = False, index = False)], titles = ['song name', 'Artist', ''])
 
 if __name__ == "__main__":
     app.run(debug = True)
-    
+    # df = pd.read_csv(".\\databases\\song_info.csv")
+    # _df = pd.DataFrame( data = {'songName' : list(df.head(N).song_name), 'artistName': list(df.head(N).artist_name), 'link' : ['link']*N } ) 
+    # print(_df.to_html())
     
 '''
 if __name__ == "__main__":
