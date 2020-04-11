@@ -76,23 +76,23 @@ p    {color: MidnightBlue;}
 
   <!--Centered link-->
   <div class="topnav-centered">
-  <a class="active" href="#home">Our recommendation</a>
+  <a class="active" href="{{ url_for('home') }}">Our recommendation</a>
   </div>
 
   <!--<a href="#news">News</a>-->
 
   <!--left-aligned links(default)-->
-  <a href="#contact">Your listning history</a>
+  <a href="{{ url_for('listeningHistory') }}">Your listning history</a>
 
   <!--right aligned link-->
   <div class="topnav-right">
-  <a href="#about">Your account details</a>
+  <a href="{{ url_for('myAccount') }}">Your account details</a>
   </div>
 </div>
 
 <div style="padding-left:16px">
-  <h2>Top Navigation Example</h2>
-  <p>Some content..</p>
+  <!-- <h2>Top Navigation Example</h2> -->
+  <p>Your listening history</p>
 </div>
 
 </body>

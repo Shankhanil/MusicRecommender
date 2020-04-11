@@ -22,14 +22,31 @@ def getHash(string):
 def index():
     return redirect(url_for("loginPage"))
 
+@app.route('/listeningHistory')
+def listeningHistory():
+    # return "your history"
+    return render_template("listeningHistory.html")
+    
+
+@app.route('/myAccount')
+def myAccount():
+    # return "your account"
+    return render_template("account.html")
+    
+    
 
 @app.route('/logOut')
 def logOut():
     session.pop('username', None)
     return render_template("login.html", message = "You've been logged out")
 
-@app.route('/home/<param>')
-def home(param):
+@app.route('/home')
+def home():
+    if 'username' not in session:
+        return redirect(url_for('loginPage'))
+    else:
+        param = session['username']
+        
     name = param.split('-')[0]
     userID = param.split('-')[1]
     print(name, userID)
@@ -131,7 +148,7 @@ def login():
             # print(msg)
             if msg == "success":
                 # return render_template("success.html")
-                return redirect(url_for("home", param = name + "-"+userID))
+                return redirect(url_for("home"))
             else:
                 return render_template("login.html")
             
@@ -159,7 +176,8 @@ def register():
                 
                 msg = "Welcome to SANGEETifyify"
                 # return redirect(url_for("loginPage"))
-                return redirect(url_for("home", param = name + "-"+userID))
+                session['username'] = name + "-" + userID
+                return redirect(url_for("home"))
                 
         except:
         
