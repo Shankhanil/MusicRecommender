@@ -5,6 +5,8 @@ import sys
 import hashlib
 import os
 from Recommender import Recommender
+import pandas as pd
+import re
 
 # SESSION_TYPE = 'redis'
 app = Flask(__name__)
@@ -20,14 +22,31 @@ def getHash(string):
 def index():
     return redirect(url_for("loginPage"))
 
+@app.route('/listeningHistory')
+def listeningHistory():
+    # return "your history"
+    return render_template("listeningHistory.html")
+    
+
+@app.route('/myAccount')
+def myAccount():
+    # return "your account"
+    return render_template("account.html")
+    
+    
 
 @app.route('/logOut')
 def logOut():
     session.pop('username', None)
     return render_template("login.html", message = "You've been logged out")
 
-@app.route('/home/<param>')
-def home(param):
+@app.route('/home')
+def home():
+    if 'username' not in session:
+        return redirect(url_for('loginPage'))
+    else:
+        param = session['username']
+        
     name = param.split('-')[0]
     userID = param.split('-')[1]
     print(name, userID)
@@ -47,6 +66,41 @@ def home(param):
     
     # return str1 + "<br><br>" + str2
     return render_template("home.html", name = name, songListfromCluster = str2, songListfromArtist = str3)
+
+@app.route('/search', methods = ['POST' , 'GET'])
+def search():
+    res = ""
+    res2 = ""
+    if request.method == 'POST':
+        searchSTR = request.form['search']
+        print(searchSTR)
+        df = pd.read_csv(".\\databases\\song_info.csv")
+        
+        L = list( df.song_name )
+        # print (L)
+        songL = []
+        for x in L:
+            X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
+            if(X):
+                # res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
+                if x not in songL:
+                    songL.append(x)
+                    
+        for x in songL:
+            res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
+                
+        L = list( df.artist_name )
+        # print (L)
+        artistL = []
+        for x in L:
+            X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
+            if(X):
+                # res2 = res2 + x + ", "
+                if x not in artistL:
+                    artistL.append(x)
+        for x in artistL:
+            res2 = res2 + x + ", "
+    return render_template("_home.html", search = res, searchArtist = res2)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -94,7 +148,7 @@ def login():
             # print(msg)
             if msg == "success":
                 # return render_template("success.html")
-                return redirect(url_for("home", param = name + "-"+userID))
+                return redirect(url_for("home"))
             else:
                 return render_template("login.html")
             
@@ -122,7 +176,8 @@ def register():
                 
                 msg = "Welcome to SANGEETifyify"
                 # return redirect(url_for("loginPage"))
-                return redirect(url_for("home", param = name + "-"+userID))
+                session['username'] = name + "-" + userID
+                return redirect(url_for("home"))
                 
         except:
         

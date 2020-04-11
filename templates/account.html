@@ -71,6 +71,7 @@ p    {color: MidnightBlue;}
 </head>
 <body>
 
+
 <!--Top navigation-->
 <div class="topnav">
 
@@ -89,38 +90,10 @@ p    {color: MidnightBlue;}
   <a href="{{ url_for('myAccount') }}">Your account details</a>
   </div>
 </div>
+<div style="padding-left:16px">
+  <!-- <h2>Top Navigation Example</h2> -->
+  <p> your account details</p>
+</div>
 
-<h2> WELCOME TO SANGEETify {{name}}</h2>
-	  
-	  <form action="http://127.0.0.1:5000/search" method = "post" >
-		  <input type="text" placeholder="Search for songs.." name="search">
-		  <button type="submit"> Search<i class="fa fa-search"></i></button>
-	  </form>
-	  <!--
-	  <tbody>
-	  {% for line in x %}
-		<tr>
-		  <td>{{ x.date|tojson|safe }}</td>
-		  <td>{{ x.users }}</td>
-		 </tr>
-	   {% endfor %}
-	</tbody>
-	
-	-->
-	<br><br>
-	  <!-- <p> your searched Song List:</p><br> -->
-	  <!-- {{search}}<br><br> -->
-	  
-	  <!-- <p> your searched Artist List:</p><br> -->
-	  <!-- {{searchArtist}}<br><br> -->
-	  
-	  
-	  <p> Here are a few songs Recommended for you:</p><br>
-	  {{songListfromCluster}}<br><br>
-	  
-	  <p> Here are a few songs from the artists that you may like:</p><br>
-	  {{songListfromArtist}}<br><br> 
-	  
-	  <a href = "http://127.0.0.1:5000/logOut">log out</a>
 </body>
 </html>
