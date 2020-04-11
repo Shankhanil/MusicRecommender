@@ -8,10 +8,8 @@ from Recommender import Recommender
 import pandas as pd
 import re
 
-# SESSION_TYPE = 'redis'
-app = Flask(__name__)
-# Session(app)
 
+app = Flask(__name__)
 
 
 def getHash(string):
@@ -24,13 +22,13 @@ def index():
 
 @app.route('/listeningHistory')
 def listeningHistory():
-    # return "your history"
+
     return render_template("listeningHistory.html")
     
 
 @app.route('/myAccount')
 def myAccount():
-    # return "your account"
+
     return render_template("account.html")
     
     
@@ -57,14 +55,7 @@ def home():
     Artistsongs = rc.getRecommendedSongsByArtist()
     str2 = ""
     str3 = ""
-    # for s in Clustersongs:
-        # str2 = str2 + s + "  ,"
-    # for s in Artistsongs:
-        # str3 = str3 + s + " , "
     
-    # str1 = "<h3>Welcome to SANGEETifyify, {}.</h3>".format(name) 
-    
-    # return str1 + "<br><br>" + str2
     songListfromCluster = False
     songListfromArtist = False
     if len(Clustersongs) > 0:
@@ -82,36 +73,39 @@ def home():
 def search():
     res = ""
     res2 = ""
+    FLAG = False
     if request.method == 'POST':
         searchSTR = request.form['search']
         print(searchSTR)
         df = pd.read_csv(".\\databases\\song_info.csv")
         
         L = list( df.song_name )
-        # print (L)
+
         songL = []
-        for x in L:
-            X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
-            if(X):
-                # res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
-                if x not in songL:
-                    songL.append(x)
-                    
-        for x in songL:
-            res = res + x + " by " + list(df[df.song_name == x].artist_name)[0] + ", "
-                
-        L = list( df.artist_name )
-        # print (L)
         artistL = []
         for x in L:
             X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
             if(X):
-                # res2 = res2 + x + ", "
+                if x not in songL:
+                    songL.append(x)
+                    
+        for x in songL:
+            artistL.append(list(df[df.song_name == x].artist_name)[0])
+        
+        dfsong = pd.DataFrame(data = { 'song': songL, 'artist': artistL } )
+        L = list( df.artist_name )
+        
+        artistL = []
+        for x in L:
+            X = re.findall('\A'+searchSTR, x, re.IGNORECASE)
+            if(X):
                 if x not in artistL:
                     artistL.append(x)
-        for x in artistL:
-            res2 = res2 + x + ", "
-    return render_template("_home.html", search = res, searchArtist = res2)
+        dfartist = pd.DataFrame(data = {'': [' ']*len(artistL), 'artist': artistL } )
+        FLAG = True
+    return render_template("_home.html", tables = [dfsong.to_html(header = False, index = False), dfartist.to_html(header = False, index = False)], \
+        titles = ['song', 'artist'], \
+        FLAG = FLAG)
 
 
 @app.route('/login', methods = ['POST', 'GET'])
@@ -139,13 +133,13 @@ def login():
                 
                 if len(rows2) > 0:
                     for r in rows2:
-                        #print("password: {}".format(r[0]))
+                        
                         hashedPass = r[0]
                     if getHash(mail + '-' + password) == hashedPass:
                         cur.execute("select name from UserDetails where userID = \'{}\'".format(userID))  
                         rows3 = cur.fetchall()
                         for r in rows3:
-                        #print("password: {}".format(r[0]))
+                        
                             name = r[0]
                             session['username'] = name + "-" + userID
                         msg = "success"
@@ -156,9 +150,9 @@ def login():
             print(sys.exc_info())
             return msg
         finally:
-            # print(msg)
+            
             if msg == "success":
-                # return render_template("success.html")
+                
                 return redirect(url_for("home"))
             else:
                 return render_template("login.html")
