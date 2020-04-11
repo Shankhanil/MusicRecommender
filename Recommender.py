@@ -13,8 +13,8 @@ class Recommender:
         self.info = pd.read_csv(".\\databases\\song_info.csv")
         self.clusters = pd.read_csv(".\\databases\\cluster.csv")
         self.FavArtist = []
-        self.history = pd.read_csv("history.csv")
-        self.listeningHistorydf = pd.read_csv("listeningHistory.csv")
+        self.history = pd.read_csv(".\\databases\\history.csv")
+        self.listeningHistorydf = pd.read_csv(".\\databases\\listeningHistory.csv")
         self.listeningHistory = list(self.listeningHistorydf[self.listeningHistorydf.userID == userID].songList)
         self.recommendedSongs = list(self.history[self.history.userID == userID].songList)
         self.recommendedSongsbyArtist = []
@@ -146,7 +146,7 @@ class Recommender:
             songList.append(s)
 
         try:
-            df = pd.read_csv("listeningHistory.csv")
+            df = pd.read_csv(".\\databases\\listeningHistory.csv")
             _userID = list(df.userID)
             _userID.extend(uID)
             _songList = list(df.songList)
@@ -158,7 +158,7 @@ class Recommender:
         finally:
             df = pd.DataFrame(data)
             df.drop_duplicates(inplace = True)
-            df.to_csv("listeningHistory.csv")
+            df.to_csv(".\\databases\\listeningHistory.csv")
         return df
         
         
@@ -170,7 +170,7 @@ class Recommender:
             songList.append(s)
 
         try:
-            df = pd.read_csv("history.csv")
+            df = pd.read_csv(".\\databases\\history.csv")
             _userID = list(df.userID)
             _userID.extend(uID)
             _songList = list(df.songList)
@@ -182,7 +182,7 @@ class Recommender:
         finally:
             df = pd.DataFrame(data)
             df.drop_duplicates(inplace = True)
-            df.to_csv("history.csv")
+            df.to_csv(".\\databases\\history.csv")
         return df
     
     def addToHistory_Favartist(self, mostPopArtist):
@@ -194,7 +194,7 @@ class Recommender:
             artistList.append(s)
 
         try:
-            df = pd.read_csv("favartist.csv")
+            df = pd.read_csv(".\\databases\\favartist.csv")
             _userID = list(df.userID)
             _userID.extend(uID)
             _artistList = list(df.artistList)
@@ -206,12 +206,12 @@ class Recommender:
         finally:
             df = pd.DataFrame(data)
             df.drop_duplicates(inplace = True)
-            df.to_csv("favartist.csv")
+            df.to_csv(".\\databases\\favartist.csv")
         return df
 
     
     def getFromDB(self):
-        df = pd.read_csv("history.csv")
+        df = pd.read_csv(".\\databases\\history.csv")
         return df
     
     
